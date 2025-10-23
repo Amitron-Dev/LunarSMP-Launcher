@@ -1,7 +1,7 @@
 {
     "name": "LunarSMP-Launcher",
     "preductname": "LunarSMP",
-    "version": "2.1.3",
+    "version": "0.0.1",
     "description": "Launcher Mincraft pour le serveur LunarSMP",
     "main": "src/app.js",
     "author": {
