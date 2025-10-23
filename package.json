@@ -1,7 +1,7 @@
 {
     "name": "LunarSMP-Launcher",
     "preductname": "LunarSMP",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Launcher Mincraft pour le serveur LunarSMP",
     "main": "src/app.js",
     "author": {
@@ -39,6 +39,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Amitron-Dev/LunarSMP-Launcher.git.git"
+        "url": "git+https://github.com/Amitron-Dev/LunarSMP-Launcher.git"
     }
 }
