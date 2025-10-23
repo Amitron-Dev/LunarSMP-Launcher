@@ -1,7 +1,7 @@
 {
     "name": "LunarSMP-Launcher",
     "preductname": "LunarSMP",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Launcher Mincraft pour le serveur LunarSMP",
     "main": "src/app.js",
     "author": {
@@ -9,7 +9,7 @@
         "email": "contact@amitron.fr",
         "url": "https://github.com/amitron-dev"
     },
-    "url": "http://lunarsmplauncher.amihost.fr",
+    "url": "http://launcher01lunarsmp.amihost.fr",
     "scripts": {
         "start": "cross-env-shell NODE_ENV=dev electron .",
         "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
