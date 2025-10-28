@@ -1,8 +1,8 @@
 {
-    "name": "LunarSMP-Launcher",
-    "preductname": "LunarSMP",
-    "version": "0.1.2",
-    "description": "Launcher Mincraft pour le serveur LunarSMP",
+    "name": "Lumerya-Launcher",
+    "preductname": "Lumerya",
+    "version": "0.1.5",
+    "description": "Launcher Mincraft pour le serveur Lumerya",
     "main": "src/app.js",
     "author": {
         "name": "Amitron, Inc.",
@@ -14,7 +14,7 @@
         "start": "cross-env-shell NODE_ENV=dev electron .",
         "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
         "build": "node build.js --obf=true --build=platform",
-        "icon": "node build.js --icon=http://lunarsmplauncher.amihost.fr/icon.png"
+        "icon": "node build.js --icon=http://launcher01lunarsmp.amihost.fr/logo.png"
     },
     "license": "CCANC",
     "nodemonConfig": {
@@ -22,6 +22,7 @@
         "ignore": "**/test"
     },
     "dependencies": {
+        "discord-rpc-electron": "^4.0.2",
         "electron-updater": "^6.1.8",
         "minecraft-java-core": "^4.1.4",
         "node-bdd": "^2.0.4",

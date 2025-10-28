@@ -9,26 +9,28 @@ import { popup, database, changePanel, accountSelect, addAccount, config, setSta
 
 class Login {
     static id = "login";
+
     async init(config) {
         this.config = config;
         this.db = new database();
 
-        if (typeof this.config.online == 'boolean') {
-            this.config.online ? this.getMicrosoft() : this.getCrack()
-        } else if (typeof this.config.online == 'string') {
-            if (this.config.online.match(/^(http|https):\/\/[^ "]+$/)) {
-                this.getAZauth();
-            }
+        // Afficher toujours les deux options principales : premium & offline
+        this.getMicrosoft();
+        this.getCrack();
+
+        // Si configuré pour AZauth, on l'affiche aussi
+        if (typeof this.config.online === 'string' && this.config.online.match(/^(http|https):\/\/[^ "]+$/)) {
+            this.getAZauth();
         }
-        
+
         document.querySelector('.cancel-home').addEventListener('click', () => {
-            document.querySelector('.cancel-home').style.display = 'none'
-            changePanel('settings')
-        })
+            document.querySelector('.cancel-home').style.display = 'none';
+            changePanel('settings');
+        });
     }
 
     async getMicrosoft() {
-        console.log('Initializing Microsoft login...');
+        console.log('Initializing Microsoft/premium login...');
         let popupLogin = new popup();
         let loginHome = document.querySelector('.login-home');
         let microsoftBtn = document.querySelector('.connect-home');
@@ -41,27 +43,50 @@ class Login {
                 color: 'var(--color)'
             });
 
-            ipcRenderer.invoke('Microsoft-window', this.config.client_id).then(async account_connect => {
-                if (account_connect == 'cancel' || !account_connect) {
+            ipcRenderer.invoke('Microsoft-window', this.config.client_id)
+                .then(async account_connect => {
                     popupLogin.closePopup();
-                    return;
-                } else {
-                    await this.saveData(account_connect)
-                    popupLogin.closePopup();
-                }
 
-            }).catch(err => {
-                popupLogin.openPopup({
-                    title: 'Erreur',
-                    content: err,
-                    options: true
+                    if (!account_connect || account_connect === 'cancel') return;
+
+                    // 🔧 Normalisation des données Microsoft
+                    if (!account_connect.name && account_connect.selectedProfile) {
+                        account_connect.name = account_connect.selectedProfile.name;
+                    }
+
+                    if (!account_connect.uuid && account_connect.selectedProfile) {
+                        account_connect.uuid = account_connect.selectedProfile.id;
+                    }
+
+                    // 🔧 Ajout d’un ID unique si manquant
+                    if (!account_connect.ID) {
+                        account_connect.ID = `${account_connect.uuid || Date.now()}`;
+                    }
+
+                    // 🔧 Vérifie qu’on a bien un nom avant d’enregistrer
+                    if (!account_connect.name) {
+                        popupLogin.openPopup({
+                            title: 'Erreur',
+                            content: 'Impossible de récupérer le nom du compte Microsoft.',
+                            options: true
+                        });
+                        return;
+                    }
+
+                    await this.saveData(account_connect);
+                })
+                .catch(err => {
+                    popupLogin.openPopup({
+                        title: 'Erreur de connexion',
+                        content: `${err}`,
+                        options: true
+                    });
                 });
-            });
-        })
+        });
     }
 
     async getCrack() {
-        console.log('Initializing offline login...');
+        console.log('Initializing offline login (crack)...');
         let popupLogin = new popup();
         let loginOffline = document.querySelector('.login-offline');
 
@@ -98,7 +123,7 @@ class Login {
                 });
                 return;
             }
-            await this.saveData(MojangConnect)
+            await this.saveData(MojangConnect);
             popupLogin.closePopup();
         });
     }
@@ -126,7 +151,7 @@ class Login {
                 color: 'var(--color)'
             });
 
-            if (AZauthEmail.value == '' || AZauthPassword.value == '') {
+            if (AZauthEmail.value === '' || AZauthPassword.value === '') {
                 PopupLogin.openPopup({
                     title: 'Erreur',
                     content: 'Veuillez remplir tous les champs.',
@@ -161,7 +186,7 @@ class Login {
                         color: 'var(--color)'
                     });
 
-                    if (AZauthA2F.value == '') {
+                    if (AZauthA2F.value === '') {
                         PopupLogin.openPopup({
                             title: 'Erreur',
                             content: 'Veuillez entrer le code A2F.',
@@ -181,11 +206,11 @@ class Login {
                         return;
                     }
 
-                    await this.saveData(AZauthConnect)
+                    await this.saveData(AZauthConnect);
                     PopupLogin.closePopup();
                 });
             } else if (!AZauthConnect.A2F) {
-                await this.saveData(AZauthConnect)
+                await this.saveData(AZauthConnect);
                 PopupLogin.closePopup();
             }
         });
@@ -193,19 +218,19 @@ class Login {
 
     async saveData(connectionData) {
         let configClient = await this.db.readData('configClient');
-        let account = await this.db.createData('accounts', connectionData)
-        let instanceSelect = configClient.instance_selct
-        let instancesList = await config.getInstanceList()
+        let account = await this.db.createData('accounts', connectionData);
+        let instanceSelect = configClient.instance_selct;
+        let instancesList = await config.getInstanceList();
         configClient.account_selected = account.ID;
 
         for (let instance of instancesList) {
             if (instance.whitelistActive) {
-                let whitelist = instance.whitelist.find(whitelist => whitelist == account.name)
+                let whitelist = instance.whitelist.find(w => w === account.name);
                 if (whitelist !== account.name) {
-                    if (instance.name == instanceSelect) {
-                        let newInstanceSelect = instancesList.find(i => i.whitelistActive == false)
-                        configClient.instance_selct = newInstanceSelect.name
-                        await setStatus(newInstanceSelect.status)
+                    if (instance.name === instanceSelect) {
+                        let newInstanceSelect = instancesList.find(i => i.whitelistActive === false);
+                        configClient.instance_selct = newInstanceSelect.name;
+                        await setStatus(newInstanceSelect.status);
                     }
                 }
             }
@@ -217,4 +242,5 @@ class Login {
         changePanel('home');
     }
 }
+
 export default Login;
