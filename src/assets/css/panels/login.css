@@ -1,59 +1,40 @@
 .login .container {
     display: flex;
     align-items: center;
-    justify-content: space-evenly; /* place les deux blocs gauche/droite */
+    justify-content: center;
     height: 100%;
-    gap: 3rem; /* espace entre les deux */
 }
 
 .login-tabs {
+    position: absolute;
+    padding: 15px;
     background: var(--background);
     border-radius: 15px;
     text-align: center;
-    padding: 25px;
-    width: 35%;
-    min-width: 300px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    min-width: 40%;
 }
 
-/* Ajustement : afficher les deux par défaut */
 .login-home,
-.login-offline {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
+.login-offline,
 .login-AZauth,
 .login-AZauth-A2F {
-    display: none; /* reste caché si pas utilisé */
+    display: none;
 }
 
 .login-text {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+    font-size: 1.3rem;
 }
 
 .connect,
 .cancel {
     background: none;
     color: var(--color);
-    border: solid 3px var(--element-color);
+    border: solid 4px var(--element-color);
     border-radius: 10px;
-    padding: 0.5rem 3rem;
-    font-size: 1rem;
+    padding: 0.3rem 4rem;
+    font-size: inherit;
     font-weight: bold;
     margin: 15px 10px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.connect:hover {
-    background: var(--element-color);
-    color: var(--background);
-    transform: scale(1.05);
 }
 
 .input-login .email,
@@ -63,21 +44,7 @@
     background: none;
     border: solid 2px var(--element-color);
     border-radius: 30px;
-    width: 80%;
-    padding: 0.5rem 1rem;
+    width: 50%;
+    padding: 0.4rem 1rem;
     margin-top: 10px;
-    text-align: center;
-    font-size: 1rem;
-}
-
-/* Responsive (mobile/tablette) */
-@media (max-width: 900px) {
-    .login .container {
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .login-tabs {
-        width: 80%;
-    }
 }
