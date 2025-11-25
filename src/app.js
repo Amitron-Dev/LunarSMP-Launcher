@@ -47,7 +47,7 @@ function setActivity() {
     pid: process.pid,
     activity: {
       details: 'Joue à Lumerya',
-      state: 'Sur le launcher',
+      state: '',
       startTimestamp: Date.now(),
       largeImageKey: 'lunar_logo',     // Assure-toi que cette clé existe comme asset Discord
       largeImageText: 'Lumerya',
